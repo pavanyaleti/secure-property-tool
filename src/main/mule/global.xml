@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
+	<http:listener-config
+		name="secure-property-tool-httpListenerConfig">
+		<http:listener-connection host="${httpListener.host}"
+			port="${httpListener.port}" readTimeout="${httpListener.readTimeout}"/>
+	</http:listener-config>
+	<apikit:config name="secure-property-tool-config"
+		api="resource::649a7ec8-7b87-46cc-ac00-b7508ff2e218:secure-property-tool:1.0.2:raml:zip:secure-property-tool.raml"
+		outboundHeadersMapName="outboundHeaders"
+		httpStatusVarName="httpStatus" />
+	<api-gateway:autodiscovery apiId="${api.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="427bf7aa-6385-4bdd-86b5-4400399a5569" flowRef="secure-property-tool-main" />
+	<configuration-properties doc:name="common-properties" doc:id="d956bc1b-ef41-43b0-acb6-54b08de6cb86" file="properties\common-properties.yaml" />
+	<configuration-properties doc:name="local-properties" doc:id="596a72b4-fa2a-4886-9995-8799ae07308e" file="properties/${env}-properties.yaml" />
+	<http:request-config name="Secure-property-tool"
+		doc:name="HTTP Request config"
+		doc:id="66cb0599-457e-4aef-be88-178379cc874c" basePath="#[p('httpRequest.securePropertyTool.basepath')]">
+		<http:request-connection protocol="HTTPS" host="#[p('httpRequest.securePropertyTool.host')]" port="#[p('httpRequest.securePropertyTool.port')]" />
+	</http:request-config>
+
+</mule>

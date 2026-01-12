@@ -1,0 +1,15 @@
+httpListener:
+  host: localhost
+  port: "8081"
+  path: /api/*
+  readTimeout: "30000"
+httpRequest:
+  securePropertyTool:
+    host: secure-properties-api.us-e1.cloudhub.io
+    port: "443"
+    basepath: /api
+    path: /string  
+secureProperty:
+  algorithm: Blowfish
+  mode: CBC
+  method: string

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<sub-flow name="encrypt-decrypt-string-main"
+		doc:id="633a1855-d922-404b-8d9b-4d4c58ec2139">
+		<logger level="INFO" doc:name="Start"
+			doc:id="c10e0059-a2c7-4937-937c-2d3210ee2093"
+			message="Before String Encryption" />
+		<ee:transform doc:name="Request Payload"
+			doc:id="9b3baec5-fd9d-48da-9216-dc25bd9277ba">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output multipart/form-data
+---
+{
+  "parts": {
+    "operation": {
+      "headers": {
+        "Content-Disposition": {
+          "name": "operation",
+          "subtype": "form-data"
+        }
+      },
+      "content": vars.operation as String
+    },
+    "algorithm": {
+      "headers": {
+        "Content-Disposition": {
+          "name": "algorithm",
+          "subtype": "form-data"
+        }
+      },
+      "content": p('secureProperty.algorithm')
+    },
+    "mode": {
+      "headers": {
+        "Content-Disposition": {
+          "name": "mode",
+          "subtype": "form-data"
+        }
+      },
+      "content": p('secureProperty.mode')
+    },
+    "key": {
+      "headers": {
+        "Content-Disposition": {
+          "name": "key",
+          "subtype": "form-data"
+        }
+      },
+      "content": p('secureProperty.key')
+    },
+    "value": {
+      "headers": {
+        "Content-Disposition": {
+          "name": "value",
+          "subtype": "form-data"
+        }
+      },
+      "content": payload.property
+    },
+    "method": {
+      "headers": {
+        "Content-Disposition": {
+          "name": "method",
+          "subtype": "form-data"
+        }
+      },
+      "content": p('secureProperty.method')
+    }
+  }
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="DEBUG" doc:name="Payload" doc:id="7a5bb780-531d-4161-a651-7288ae8ee30f" message="#[%dw 2.0&#10;output application/json&#10;---&#10;payload]"/>
+		<try doc:name="Try" doc:id="5230ddfc-6405-4df3-9bc5-80072d373420">
+			<http:request method="POST" doc:name="Request"
+				doc:id="89c79d98-b1a3-430f-81ff-5df2a4513a4e"
+				config-ref="Secure-property-tool"
+				sendCorrelationId="AUTO" path="#[p('httpRequest.securePropertyTool.path')]"/>
+			<error-handler>
+				<on-error-propagate enableNotifications="true"
+					logException="true" doc:name="On Error Propagate"
+					doc:id="b6f3f96b-c69d-4321-b782-f7e27fd5d7c1" type="ANY">
+					<ee:transform doc:name="Error Payload"
+						doc:id="fe0bcc6b-6b7e-4fc3-a44c-e488bf49c6f9">
+						<ee:message>
+							<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+error.description]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</on-error-propagate>
+			</error-handler>
+		</try>
+		<ee:transform doc:name="Response Payload"
+			doc:id="853920e0-013e-4d15-871e-e689d1434825">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+fun capitalizedString(myString) = (upper(myString[0]) ++ myString[1 to -1])
+output application/json
+---
+{
+	(capitalizedString(vars.operation) ++ "ed Value"): payload.property
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End"
+			doc:id="5f9f809e-771a-4ff2-b1dd-0e515cd3d5f1"
+			message="String Encryption Successful" />
+	</sub-flow>
+</mule>

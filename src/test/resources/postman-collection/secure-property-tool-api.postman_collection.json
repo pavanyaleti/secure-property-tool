@@ -1,0 +1,168 @@
+{
+	"info": {
+		"_postman_id": "acc460ed-352c-4361-870d-fdd05b4f45f0",
+		"name": "secure-property-tool-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14515373"
+	},
+	"item": [
+		{
+			"name": "encrypt",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"property\":\"<value>\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}{{basepath}}/encrypt",
+					"host": [
+						"{{host}}{{basepath}}"
+					],
+					"path": [
+						"encrypt"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "decrypt",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"property\":\"<encrypted-value>\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}{{basepath}}/decrypt",
+					"host": [
+						"{{host}}{{basepath}}"
+					],
+					"path": [
+						"decrypt"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "secure-properties-api",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "operation",
+							"value": "encrypt",
+							"type": "text"
+						},
+						{
+							"key": "algorithm",
+							"value": "Blowfish",
+							"type": "text"
+						},
+						{
+							"key": "mode",
+							"value": "CBC",
+							"type": "text"
+						},
+						{
+							"key": "key",
+							"value": "key",
+							"type": "text"
+						},
+						{
+							"key": "value",
+							"value": "PavanKumar",
+							"type": "text"
+						},
+						{
+							"key": "method",
+							"value": "string",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://secure-properties-api.us-e1.cloudhub.io/api/string",
+					"protocol": "https",
+					"host": [
+						"secure-properties-api",
+						"us-e1",
+						"cloudhub",
+						"io"
+					],
+					"path": [
+						"api",
+						"string"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "57D00132FC27419BAF89236F09296a1d",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "436165abc4734a7aa88b827492c8f175",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "basepath",
+			"value": ""
+		},
+		{
+			"key": "host",
+			"value": ""
+		}
+	]
+}

@@ -1,0 +1,61 @@
+%dw 2.0
+output multipart/form-data
+---
+{
+  "parts": {
+    "operation": {
+      "headers": {
+        "Content-Disposition": {
+          "name": "operation",
+          "subtype": "form-data"
+        }
+      },
+      "content": vars.operation as String
+    },
+    "algorithm": {
+      "headers": {
+        "Content-Disposition": {
+          "name": "algorithm",
+          "subtype": "form-data"
+        }
+      },
+      "content": "Blowfish"
+    },
+    "mode": {
+      "headers": {
+        "Content-Disposition": {
+          "name": "mode",
+          "subtype": "form-data"
+        }
+      },
+      "content": "CBC"
+    },
+    "key": {
+      "headers": {
+        "Content-Disposition": {
+          "name": "key",
+          "subtype": "form-data"
+        }
+      },
+      "content": "key"
+    },
+    "value": {
+      "headers": {
+        "Content-Disposition": {
+          "name": "value",
+          "subtype": "form-data"
+        }
+      },
+      "content": payload.property
+    },
+    "method": {
+      "headers": {
+        "Content-Disposition": {
+          "name": "method",
+          "subtype": "form-data"
+        }
+      },
+      "content": "string"
+    }
+  }
+}
